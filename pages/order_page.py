@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from pages.base_page import BasePage
-
+import allure
 
 class OrderPage(BasePage):
     NAME = (By.XPATH, "//input[@placeholder='* Имя']")
@@ -18,6 +18,7 @@ class OrderPage(BasePage):
     CONFIRM_BUTTON = (By.XPATH, "//button[text()='Да']")
     SUCCESS_MODAL = (By.CLASS_NAME, "Order_ModalHeader__3FDaJ")
 
+    @allure.step("Заполнить форму «Для кого самокат»")
     def fill_who_is_the_scooter_for(self, name, surname, address, metro, phone):
         self.type(self.NAME, name)
         self.type(self.SURNAME, surname)
@@ -28,11 +29,13 @@ class OrderPage(BasePage):
         metro_field.send_keys(metro)
         metro_field.send_keys(Keys.ARROW_DOWN)
         metro_field.send_keys(Keys.ENTER)
-
+        metro_field.send_keys(Keys.ESCAPE)
+        self.scroll_to(self.PHONE)
         self.type(self.PHONE, phone)
         self.click(self.NEXT_BUTTON)
         self.scroll_to(self.DATE)
 
+    @allure.step("Заполнить «Про аренду» и подтвердить заказ")
     def fill_rent_info(self, date, period, color, comment):
         date_field = self.scroll_to(self.DATE)
         date_field.click()
