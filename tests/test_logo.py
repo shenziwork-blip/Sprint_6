@@ -21,6 +21,6 @@ class TestLogo:
         page.open_main()
         page.click_yandex_logo()
         page.switch_to_new_window()
-        page.wait.until(lambda d: d.current_url != "about:blank")
+        page.wait_url_loaded()
         url = page.current_url()
         assert "dzen.ru" in url or "ya.ru" in url or "yandex.ru" in url

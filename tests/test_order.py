@@ -9,23 +9,7 @@ from data.order_data import ORDER_DATA
 @allure.feature("Позитивный сценарий")
 class TestOrder:
 
-    @allure.title("Заказ самоката через кнопку {button}")
-    @pytest.mark.parametrize(
-        "button, order",
-        [
-            ("header", ORDER_DATA[0]),
-            ("footer", ORDER_DATA[1]),
-        ],
-    )
-    def test_successful_order(self, driver, button, order):
-        main = MainPage(driver)
-        main.open_main()
-
-        if button == "header":
-            main.click_order_header()
-        else:
-            main.click_order_footer()
-
+    def _make_order(self, driver, order):
         page = OrderPage(driver)
         page.fill_who_is_the_scooter_for(
             order["name"],
@@ -40,6 +24,21 @@ class TestOrder:
             order["color"],
             order["comment"],
         )
-
         assert "Заказ оформлен" in page.success_text()
+
+    @allure.title("Заказ самоката через кнопку в шапке")
+    @pytest.mark.parametrize("order", [ORDER_DATA[0]])
+    def test_order_from_header(self, driver, order):
+        main = MainPage(driver)
+        main.open_main()
+        main.click_order_header()
+        self._make_order(driver, order)
+
+    @allure.title("Заказ самоката через кнопку внизу")
+    @pytest.mark.parametrize("order", [ORDER_DATA[1]])
+    def test_order_from_footer(self, driver, order):
+        main = MainPage(driver)
+        main.open_main()
+        main.click_order_footer()
+        self._make_order(driver, order)
         

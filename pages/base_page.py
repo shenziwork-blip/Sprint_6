@@ -26,6 +26,9 @@ class BasePage:
     def current_url(self):
         return self.driver.current_url
 
+    def wait_url_loaded(self):
+        self.wait.until(lambda d: d.current_url != "about:blank")
+
     def type(self, locator, text):
         field = self.wait.until(EC.visibility_of_element_located(locator))
         field.clear()
